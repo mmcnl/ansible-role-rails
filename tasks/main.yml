@@ -1,16 +1,11 @@
 ---
 - name: install extra packages for rails
   apt:
-    pkg:
-      - libpq-dev # for pg gem
-      - python-psycopg2 # for pg gem
-      - nodejs
+    pkg: "{{ rails_extra_packages }}"
     cache_valid_time: 86400 # 1 day
 
 - name: setup logrotation for rails
-  include_role:
-    name: nickhammond.logrotate
-  vars:
-    logrotate_scripts:
-      - name: rails
-        path: "{{ rails_log_dir }}"
+  template:
+    src: rails-logrotate.j2
+    dest: /etc/logrotate.d/rails
+    mode: 0644
