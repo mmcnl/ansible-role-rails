@@ -1,0 +1,46 @@
+---
+- name: "install nginx server block for {{ rails_codename }}"
+  template:
+    src: nginx_server_block.conf.j2
+    dest: "/etc/nginx/sites-available/{{ rails_codename }}.conf"
+  notify: restart nginx
+
+- name: "create symlink to activate {{ rails_codename }}"
+  file:
+    state: link
+    src: "/etc/nginx/sites-available/{{ rails_codename }}.conf"
+    dest: "/etc/nginx/sites-enabled/{{ rails_codename }}.conf"
+  notify: restart nginx
+
+- name: set up HTTP basic auth
+  template:
+    src: htpasswd.j2
+    dest: "{{ rails_root_dir }}/htpasswd"
+    mode: 0600
+    owner: "{{ rails_deploy_user }}"
+  when: rails_http_auth_enabled|bool
+  notify: restart nginx
+
+- name: remove old domain names
+  lineinfile:
+    path: /etc/hosts
+    # use negative lookahead to find lines that don't match ip followed by
+    # tab then either localhost or a permitted domain
+    regexp: '^127\.0\.0\.1	(?!(localhost|{{ rails_hosts_file_domains|join("|") }}))'
+    state: absent
+  tags: etc_hosts
+
+- name: add domain name to hosts file to allow monit to perform checks in sandbox env
+  lineinfile:
+    path: /etc/hosts
+    line: "127.0.0.1	{{ item }}"
+  with_items: "{{ rails_hosts_file_domains }}"
+  when: rails_update_hosts_file|bool
+  tags: etc_hosts
+
+- name: add monit configuration for website
+  template:
+    src: nginx-website-monit.j2
+    dest: /etc/monit/conf.d/{{ rails_codename }}-website
+    mode: 0600
+  notify: reload monit

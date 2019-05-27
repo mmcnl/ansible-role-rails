@@ -1,10 +1,12 @@
+# -*- mode: conf -*-
 # {{ ansible_managed }}
-
-{{ rails_log_dir }} {
+{{ rails_log_files }} {
+  su {{ rails_deploy_user }} www-data
 	daily
-	missingok
 	rotate 30
+	notifempty
+	missingok
+  copytruncate
 	compress
 	delaycompress
-	notifempty
 }

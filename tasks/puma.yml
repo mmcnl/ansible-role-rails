@@ -1,0 +1,28 @@
+---
+- name: set up puma dirs
+  file:
+    state: directory
+    dest: "{{ rails_shared_dir }}/{{ item }}"
+    owner: "{{ rails_deploy_user }}"
+    group: "{{ rails_deploy_user }}"
+  with_items:
+    - pids
+
+- name: update puma systemd service config
+  template:
+    src: puma.service.j2
+    dest: /lib/systemd/system/puma.service
+  notify: restart puma
+
+- name: set up puma config file
+  template:
+    src: puma.rb.j2
+    dest: "{{ rails_shared_dir }}/puma.rb"
+  notify: restart puma
+
+- name: watch puma with monit
+  template:
+    src: rails-puma-monit.j2
+    dest: /etc/monit/conf.d/puma
+    mode: 0600
+  notify: reload monit

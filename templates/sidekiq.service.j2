@@ -1,0 +1,34 @@
+# -*- mode: systemd -*-
+# {{ ansible_managed }}
+
+# https://raw.githubusercontent.com/mperham/sidekiq/master/examples/systemd/sidekiq.service
+
+[Unit]
+Description=Sidekiq
+# start us only once the network and logging subsystems are available,
+After=syslog.target network.target redis-server.service
+StartLimitInterval=200
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User={{ rails_deploy_user }}
+Group={{ rails_deploy_user }}
+UMask=0002
+
+# Greatly reduce Ruby memory fragmentation and heap usage
+# https://www.mikeperham.com/2018/04/25/taming-rails-memory-bloat/
+Environment=MALLOC_ARENA_MAX=2
+
+WorkingDirectory={{ rails_current_dir }}
+ExecStart=/usr/local/bin/bundle exec sidekiq -e {{ rails_env }} --tag {{ rails_codename }}
+
+Restart=on-failure
+RestartSec=60
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=sidekiq
+
+[Install]
+WantedBy=multi-user.target

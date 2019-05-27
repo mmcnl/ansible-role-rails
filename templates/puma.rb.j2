@@ -1,0 +1,9 @@
+# -*- mode: ruby -*-
+# {{ ansible_managed }}
+
+workers '{{ rails_puma_workers }}'
+threads '{{ rails_puma_min_threads }}', '{{ rails_puma_max_threads }}'
+environment '{{ rails_env }}'
+
+bind 'tcp://{{ rails_puma_bind }}'
+pidfile '{{ rails_shared_dir }}/pids/puma.pid'

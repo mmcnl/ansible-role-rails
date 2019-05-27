@@ -1,0 +1,13 @@
+---
+- name: update sidekiq systemd service config
+  template:
+    src: sidekiq.service.j2
+    dest: /lib/systemd/system/sidekiq.service
+  notify: restart sidekiq
+
+- name: watch sidekiq with monit
+  template:
+    src: rails-sidekiq-monit.j2
+    dest: /etc/monit/conf.d/sidekiq
+    mode: 0600
+  notify: reload monit

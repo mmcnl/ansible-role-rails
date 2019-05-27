@@ -1,0 +1,14 @@
+---
+- name: restart puma
+  systemd:
+    name: puma
+    enabled: yes
+    state: restarted
+    daemon_reload: yes
+
+- name: restart sidekiq
+  systemd:
+    name: sidekiq
+    enabled: yes
+    state: restarted
+    daemon_reload: yes

@@ -1,0 +1,27 @@
+# -*- mode: systemd -*-
+# {{ ansible_managed }}
+
+[Unit]
+Description=Puma
+After=network.target nginx.service
+StartLimitInterval=200
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User={{ rails_deploy_user }}
+Group={{ rails_deploy_user }}
+UMask=0002
+
+WorkingDirectory={{ rails_current_dir }}
+ExecStart=/usr/local/bin/bundle exec puma -C {{ rails_shared_dir }}/puma.rb -e {{ rails_env }}
+
+Restart=on-failure
+RestartSec=60
+
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=puma
+
+[Install]
+WantedBy=multi-user.target

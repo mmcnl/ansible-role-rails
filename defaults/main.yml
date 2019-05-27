@@ -1,0 +1,22 @@
+---
+rails_root_dir: "{{ rails_deploy_base_dir }}/{{ rails_codename }}"
+rails_shared_dir: "{{ rails_root_dir }}/shared"
+rails_current_dir: "{{ rails_root_dir }}/current"
+rails_html_dir: "{{ rails_current_dir }}/public"
+rails_monit_name: "{{ rails_codename }}-website"
+rails_hosts_file_domains:
+  - "{{ rails_domain_name }}"
+rails_env: production
+rails_extra_packages: []
+rails_http_auth_enabled: no
+rails_http_auth_password:
+rails_http_auth_user:
+rails_log_files: "{{ rails_shared_dir }}/logs/*.log"
+rails_puma_bind: 'localhost:3000'
+rails_puma_workers: 2
+rails_puma_max_threads: 3
+rails_puma_min_threads: 3
+rails_puma_pid_file: "{{ rails_shared_dir }}/pids/puma.pid"
+rails_ssl_certificate: /etc/ssl/certs/ssl-cert-snakeoil.pem
+rails_ssl_certificate_key: /etc/ssl/private/ssl-cert-snakeoil.key
+rails_monit_validate_ssl_cert: no

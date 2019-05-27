@@ -1,0 +1,32 @@
+---
+- name: install extra packages for rails
+  apt:
+    pkg: "{{ rails_extra_packages }}"
+    cache_valid_time: 86400 # 1 day
+
+- name: Create deploy user
+  user:
+    name: "{{ rails_deploy_user }}"
+    groups: www-data
+    create_home: yes # bundler complains if deploy user's home doesn't exist
+    shell: /bin/false
+
+- name: "ensure {{ website_codename }} root directory present"
+  file:
+    path: "{{ rails_root_dir }}"
+    state: directory
+    owner: "{{ rails_deploy_user }}"
+    group: "{{ rails_deploy_user }}"
+    mode: 0755
+
+- name: setup logrotation for rails
+  template:
+    src: rails-logrotate.j2
+    dest: /etc/logrotate.d/rails
+    mode: 0644
+
+- name: create production-console shortcut
+  template:
+    src: production-console.j2
+    dest: /usr/local/bin/production-console
+    mode: 0755

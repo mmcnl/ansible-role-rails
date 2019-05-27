@@ -1,2 +1,4 @@
 ---
-dependencies: []
+dependencies:
+- role: mmcnl.nginx_handlers
+- role: mmcnl.monit_handlers

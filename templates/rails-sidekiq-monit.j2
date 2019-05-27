@@ -1,0 +1,5 @@
+# -*- mode: conf -*-
+# {{ ansible_managed }}
+
+check process "sidekiq" matching "sidekiq.*{{ rails_codename }}"
+   if does not exist for 2 times within 3 cycles then alert

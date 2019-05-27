@@ -1,11 +1,12 @@
 ---
-- name: install extra packages for rails
-  apt:
-    pkg: "{{ rails_extra_packages }}"
-    cache_valid_time: 86400 # 1 day
+- import_tasks: setup.yml
+  tags: rails_setup
 
-- name: setup logrotation for rails
-  template:
-    src: rails-logrotate.j2
-    dest: /etc/logrotate.d/rails
-    mode: 0644
+- import_tasks: nginx.yml
+  tags: rails_nginx
+
+- import_tasks: puma.yml
+  tags: rails_puma
+
+- import_tasks: sidekiq.yml
+  tags: rails_sidekiq

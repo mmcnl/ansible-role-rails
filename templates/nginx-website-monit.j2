@@ -1,0 +1,36 @@
+# -*- mode: conf -*-
+# {{ ansible_managed }}
+
+check host {{ rails_monit_name }} with address {{ rails_domain_name }}
+  # http
+  if failed
+    port 80
+    protocol http
+    {% if rails_http_auth_enabled == True %}
+      username {{ rails_http_auth_user }}
+      password {{ rails_http_auth_password }}
+    {% endif %}
+
+    status = 301
+    with timeout 1 seconds
+    for 2 times within 3 cycles then alert
+
+  if failed
+    port 443
+    protocol https
+    {% if rails_http_auth_enabled == True %}
+      username {{ rails_http_auth_user }}
+      password {{ rails_http_auth_password }}
+    {% endif %}
+    with timeout 1 seconds
+
+    {% if rails_monitored_content is defined %}
+      content = "{{ rails_monitored_content }}"
+    {% endif %}
+
+    with certificate valid > 21 days
+    {% if not rails_monit_validate_ssl_cert %}
+      with ssl options {selfsigned: allow}
+    {% endif %}
+
+    for 2 times within 3 cycles then alert
