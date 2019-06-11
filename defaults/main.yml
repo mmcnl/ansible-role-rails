@@ -1,7 +1,6 @@
 ---
-rails_root_dir: "{{ rails_deploy_base_dir }}/{{ rails_codename }}"
-rails_shared_dir: "{{ rails_root_dir }}/shared"
-rails_current_dir: "{{ rails_root_dir }}/current"
+rails_shared_dir: "{{ rails_deploy_base_dir }}/shared"
+rails_current_dir: "{{ rails_deploy_base_dir }}/current"
 rails_html_dir: "{{ rails_current_dir }}/public"
 rails_monit_name: "{{ rails_codename }}-website"
 rails_hosts_file_domains:
@@ -12,6 +11,7 @@ rails_http_auth_enabled: no
 rails_http_auth_password:
 rails_http_auth_user:
 rails_log_files: "{{ rails_shared_dir }}/logs/*.log"
+rails_monitored_content:
 rails_puma_bind: 'localhost:3000'
 rails_puma_workers: 2
 rails_puma_max_threads: 3

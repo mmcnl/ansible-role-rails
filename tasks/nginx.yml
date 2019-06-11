@@ -14,10 +14,10 @@
 
 - name: set up HTTP basic auth
   template:
-    src: htpasswd.j2
-    dest: "{{ rails_root_dir }}/htpasswd"
+    src: rails-htpasswd.j2
+    dest: "{{ rails_http_auth_htpasswd_file }}"
     mode: 0600
-    owner: "{{ rails_deploy_user }}"
+    owner: www-data
   when: rails_http_auth_enabled|bool
   notify: restart nginx
 
@@ -38,9 +38,9 @@
   when: rails_update_hosts_file|bool
   tags: etc_hosts
 
-- name: add monit configuration for website
+- name: add monit configuration for rails website
   template:
-    src: nginx-website-monit.j2
-    dest: /etc/monit/conf.d/{{ rails_codename }}-website
+    src: rails-nginx-monit.j2
+    dest: /etc/monit/conf.d/{{ rails_codename }}-rails
     mode: 0600
   notify: reload monit

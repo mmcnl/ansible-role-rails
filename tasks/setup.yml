@@ -13,7 +13,7 @@
 
 - name: "ensure {{ website_codename }} root directory present"
   file:
-    path: "{{ rails_root_dir }}"
+    path: "{{ rails_deploy_base_dir }}"
     state: directory
     owner: "{{ rails_deploy_user }}"
     group: "{{ rails_deploy_user }}"

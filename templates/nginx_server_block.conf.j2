@@ -5,6 +5,15 @@ upstream puma {
     server {{ rails_puma_bind }};
 }
 
+{% if rails_cors_allowed_url is defined %}
+# based on https://gist.github.com/Stanback/7145487#gistcomment-2824437
+map $http_origin $cors_origin_header {
+    default "";
+    "{{ rails_cors_allowed_url }}" "$http_origin";
+}
+add_header Access-Control-Allow-Origin "$cors_origin_header";
+{% endif %}
+
 server {
     listen 80;
     listen [::]:80;
@@ -29,6 +38,10 @@ server {
     }
     try_files $uri @puma;
     location @puma {
+        {% if rails_http_auth_enabled %}
+        auth_basic "{{ rails_http_auth_realm }}";
+        auth_basic_user_file {{ rails_http_auth_htpasswd_file }};
+        {% endif %}
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-Proto https;
