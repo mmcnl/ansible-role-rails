@@ -5,6 +5,17 @@
     dest: /lib/systemd/system/sidekiq.service
   notify: restart sidekiq
 
+- name: ensure config directory exists
+  file:
+    path: "{{ rails_sidekiq_config_dest | dirname }}"
+    state: directory
+
+- name: update sidekiq config
+  template:
+    src: "{{ rails_sidekiq_config }}"
+    dest: "{{ rails_sidekiq_config_dest }}"
+  notify: restart sidekiq
+
 - name: watch sidekiq with monit
   template:
     src: rails-sidekiq-monit.j2
