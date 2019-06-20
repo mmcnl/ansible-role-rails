@@ -2,7 +2,7 @@
 rails_shared_dir: "{{ rails_deploy_base_dir }}/shared"
 rails_current_dir: "{{ rails_deploy_base_dir }}/current"
 rails_html_dir: "{{ rails_current_dir }}/public"
-rails_monit_name: "{{ rails_codename }}-website"
+rails_monit_name: "{{ rails_codename }}-rails"
 rails_hosts_file_domains:
   - "{{ rails_domain_name }}"
 rails_env: production
