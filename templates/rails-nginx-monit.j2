@@ -14,7 +14,9 @@ check host {{ rails_monit_name }} with address {{ rails_domain_name }}
   if failed
     port 443
     protocol https
-    request "{{ rails_healthcheck_path }}"
+    {% if rails_monit_request_path -%}
+    request "{{ rails_monit_request_path }}"
+    {% endif -%}
 
     {% if rails_http_auth_enabled -%}
       username {{ rails_http_auth_user }}
