@@ -7,8 +7,8 @@ check host {{ rails_monit_name }} with address {{ rails_domain_name }}
     port 80
     protocol http
     status = 301
-    with timeout 1 seconds
-  for 2 times within 3 cycles then alert
+    with timeout {{ rails_monit_timeout_sec }} seconds
+  for {{ rails_monit_alert_conditions }} then alert
 
   # https
   if failed
@@ -22,7 +22,7 @@ check host {{ rails_monit_name }} with address {{ rails_domain_name }}
       username {{ rails_http_auth_user }}
       password {{ rails_http_auth_password }}
     {% endif -%}
-    with timeout 1 seconds
+    with timeout {{ rails_monit_timeout_sec }} seconds
 
     {% if rails_monitored_content %}
       content = "{{ rails_monitored_content }}"
@@ -33,4 +33,4 @@ check host {{ rails_monit_name }} with address {{ rails_domain_name }}
       with ssl options {selfsigned: allow}
     {% endif %}
 
-  for 2 times within 3 cycles then alert
+  for {{ rails_monit_alert_conditions }} then alert

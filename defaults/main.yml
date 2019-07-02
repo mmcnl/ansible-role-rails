@@ -14,6 +14,8 @@ rails_http_auth_password:
 rails_http_auth_user:
 rails_log_files: "{{ rails_shared_dir }}/logs/*.log"
 rails_monitored_content:
+rails_monit_timeout_sec: 2
+rails_monit_alert_conditions: "3 times within 5 cycles"
 rails_puma_bind: 'localhost:3000'
 rails_puma_workers: 2
 rails_puma_max_threads: 3

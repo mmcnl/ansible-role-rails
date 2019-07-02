@@ -20,27 +20,3 @@
     owner: www-data
   when: rails_http_auth_enabled
   notify: restart nginx
-
-- name: remove old domain names
-  lineinfile:
-    path: /etc/hosts
-    # use negative lookahead to find lines that don't match ip followed by
-    # tab then either localhost or a permitted domain
-    regexp: '^127\.0\.0\.1	(?!(localhost|{{ rails_hosts_file_domains|join("|") }}))'
-    state: absent
-  tags: etc_hosts
-
-- name: add domain name to hosts file to allow monit to perform checks in sandbox env
-  lineinfile:
-    path: /etc/hosts
-    line: "127.0.0.1	{{ item }}"
-  with_items: "{{ rails_hosts_file_domains }}"
-  when: rails_update_hosts_file
-  tags: etc_hosts
-
-- name: add monit configuration for rails website
-  template:
-    src: rails-nginx-monit.j2
-    dest: /etc/monit/conf.d/{{ rails_codename }}-rails
-    mode: 0600
-  notify: reload monit
