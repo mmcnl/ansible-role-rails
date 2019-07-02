@@ -18,7 +18,7 @@
     dest: "{{ rails_http_auth_htpasswd_file }}"
     mode: 0600
     owner: www-data
-  when: rails_http_auth_enabled|bool
+  when: rails_http_auth_enabled
   notify: restart nginx
 
 - name: remove old domain names
@@ -35,7 +35,7 @@
     path: /etc/hosts
     line: "127.0.0.1	{{ item }}"
   with_items: "{{ rails_hosts_file_domains }}"
-  when: rails_update_hosts_file|bool
+  when: rails_update_hosts_file
   tags: etc_hosts
 
 - name: add monit configuration for rails website
