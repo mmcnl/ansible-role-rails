@@ -21,7 +21,7 @@ UMask=0002
 Environment=MALLOC_ARENA_MAX=2
 
 WorkingDirectory={{ rails_current_dir }}
-ExecStart=/usr/local/bin/bundle exec sidekiq -e {{ rails_env }} --config {{ rails_sidekiq_config_dest }} --tag {{ rails_codename }}
+ExecStart=/usr/local/bin/bundle exec sidekiq -e {{ rails_env }} --timeout {{ rails_sidekiq_shutdown_timeout }} --config {{ rails_sidekiq_config_dest }} --tag {{ rails_codename }}
 
 Restart=on-failure
 RestartSec=60
